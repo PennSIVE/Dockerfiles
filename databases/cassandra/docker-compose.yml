@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  cassandra_seed:
+    container_name: cassandra_seed_node
+    image: cassandra
+    restart: always
+    volumes:
+      - ./data/cass_seed:/var/lib/cassandra/data
+    environment:
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=512M
+      - CASSANDRA_NUM_TOKENS=8
+      - CASSANDRA_CLUSTER_NAME=main
+      - CASSANDRA_DC=nyc
+      - CASSANDRA_RACK=rack0
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    ports:
+      - "9042:9042" # Native transport
+      - "7199:7199" # JMX
+      - "9160:9160" # Thrift clients
+
+  node_1:
+    image: cassandra
+    container_name: cassandra_node_1
+    restart: always
+    volumes:
+      - ./data/cass_1:/var/lib/cassandra/data
+    command: /bin/bash -c "echo 'Waiting for seed node' && sleep 30 && /docker-entrypoint.sh cassandra -f"
+    environment:
+      - CASSANDRA_SEEDS=cassandra_seed_node
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=512M
+      - CASSANDRA_NUM_TOKENS=8
+      - CASSANDRA_CLUSTER_NAME=main
+      - CASSANDRA_DC=nyc
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    depends_on:
+      - "cassandra_seed"
+
+  node_2:
+    image: cassandra
+    container_name: cassandra_node_2
+    restart: always
+    volumes:
+      - ./data/cass_2:/var/lib/cassandra/data
+    command: /bin/bash -c "echo 'Waiting for seed node' && sleep 80 && /docker-entrypoint.sh cassandra -f"
+    environment:
+      - CASSANDRA_SEEDS=cassandra_seed_node
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=512M
+      - CASSANDRA_NUM_TOKENS=8
+      - CASSANDRA_CLUSTER_NAME=main
+      - CASSANDRA_DC=nyc
+      - CASSANDRA_RACK=rack2
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    depends_on:
+      - "cassandra_seed"

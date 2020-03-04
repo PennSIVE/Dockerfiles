@@ -1,0 +1,29 @@
+Example scripts to setup backend infrastructure. All examples rely on docker, and some additionally rely on docker compose.
+
+Most examples need to be built using `docker build -t IMAGE_TAG .` (see `build.sh`) but some are missing `build.sh` because they can be pulled directly from docker hub. Each time you build with the same context, you should get the same result, unless a `--build-arg` is used, which is like an environment variable used during build time instead of runtime. All examples are run with a docker run command in `run.sh`.
+
+### Quick overview of docker
+When you write code you inevitably have to make a lot of assumptions about the environment it's running in e.g. is R installed, the correct versions of various language and OS-level packages, etc. And if you setup your environment manually, your code becomes hard to manage and even harder to replicate. Over time, manual hotfixes, configuration tweaks, and software updates make it very difficult to know exactly what the state of your environment is. Among other things, Docker helps solve this with a declarative language that lets you ADD and RUN code to automate environment setup, often from some "base" environment, like Ubuntu or R. 
+
+By containerizing your code and its dependencies into an image which you can run as a container, you ensure reproducibility and portability. This is almost exactly the use-case for a VM, and tools like Vagrant are very similar, but unlike a VM you don't have the overhead of running a separate kernel, etc. So, it becomes feasible to enforce a separation of concerns at the OS level, allowing the break down of monolithic applications into microservices such that one container is only responsible for one task. Then, your containers are more analogous to programs than they are to entire OS/VMs.
+
+### Common docker run flags
+- `-d` run the container in detached mode i.e. in the background
+- `-ti` run the container in interactive mode, dropping you in the container when you start it
+- `-v` bind mount for data persistence. If you want to persist data after the container has exited, you must mount it in some way. You can either provide a path on your computer (which _must_ start with `/`) or create a docker volume and mount that. So `docker run -v $(pwd):/in/container ...` or `docker run -v /on/host:/in/container ...` will share the files between `/on/host` and `/on/container` so that any change made to a file by either the host or the container is reflected. `docker run -v dataVolume:/in/container ...` will implicitly execute `docker volume create dataVolume` then mount your volume onto `/in/container` so your files will be saved after the container exits but are inaccessible to the host. To extract files from a docker volume, it must be connected to a container.
+- `--entrypoint` will override the default executable used to start the container, and if a command is provided after the image tag in the docker run command, that will override the default command fed to the entrypoint. For example, `docker run -it ubuntu` is implicitly `docker run -ti --entrypoint=/bin/sh -c ubuntu bash`, because the [Ubuntu Dockerfile](https://github.com/dockerfile/ubuntu/blob/master/Dockerfile) specifies bash as the CMD and Docker uses `/bin/sh -c` as the default entrypoint. See this [SO post](https://stackoverflow.com/a/21564990/2624391) for more info.
+
+### Useful docker commands
+Note that mycontainer must either be a container name or ID.
+- `docker exec -ti mycontainer bash` start a bash shell (or any other command) within a running container
+- `docker cp` can copy files into a running container (`docker cp foo.txt mycontainer:/foo.txt`) or vice-versa (`docker cp mycontainer:/foo.txt foo.txt`)
+- `docker logs mycontainer` check the stdout and stderr of your container
+- `docker system prune` cleans your computer of all stopped containers, unused networks, build cache. Include the `-a` flag to also remove unused images. Include the `-f` flag (so `docker system prune -af`) to auto-accept.
+
+### Best practices
+- Whenever possible, avoid using the `latest` tag because [it doesn't work how you might think](https://vsupalov.com/docker-latest-tag/)
+- In production, minimizing the number of layers will give you greater performance. In development, however, creating an image with as many layers as possible is sometimes useful so the docker cache can skip over code you're repeatedly executing.
+- Docker uses a build cache to skip over layers (lines in your Dockerfile) that are unmodified, however, a modified layer will break the cache for all subsequent layers. So, it is best to include long-running RUN commands at the top of your Dockerfile and COPY/ADD commands (which change every time a file it refers to does) as late in your build process as possible.
+- If you're running some sort of daemon like a webserver, include a healthcheck in your Dockerfile which is a command Docker will use to determine if a container needs to be restarted (also make sure to appropriately set the restart flag, you probably want `--restart always` on your docker run command).
+- There is a lot of debate as to how much image size matters. In the early days of docker there were many proponents of using a stripped-down OS like Alpine as a base image so `docker pull ...` is as fast as possible, but the docker cache mostly solves this problem and disk space is cheap. Alpine and a more traditional OS like Ubuntu are very similar, but have important differences in underlying libraries (glibc vs musl) that can cause enormous [performance differences](https://news.ycombinator.com/item?id=22182226).
+- Create a wrapper script for you docker run and docker build commands, but don't make them the same script
