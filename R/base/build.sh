@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build -t pennsive/r-env:latest .
+docker build -t pennsive/r-env:base .
 
