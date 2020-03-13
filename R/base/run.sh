@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker run --rm antsr
+docker run -ti --rm pennsive/r-env:base
