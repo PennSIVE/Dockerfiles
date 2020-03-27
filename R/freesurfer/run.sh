@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker run --env-file .env -ti --rm pennsive/r-env:freesurfer
+docker run -v $(pwd)/license.txt:/usr/local/freesurfer/license.txt -ti --rm pennsive/r-env:freesurfer
