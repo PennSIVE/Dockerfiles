@@ -1,5 +1,5 @@
 # r-env:base plus rstudio installation based on https://hub.docker.com/r/rocker/rstudio/dockerfile
-FROM pennsive/r-env:base
+FROM pennsive/neuror:3.6.3
 
 ARG RSTUDIO_VERSION
 ARG S6_VERSION

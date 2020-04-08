@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build -t pennsive/r-env:rstudio .
+docker build -t pennsive/rstudio:3.6.3 .
 

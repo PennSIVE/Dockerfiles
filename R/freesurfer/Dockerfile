@@ -1,4 +1,4 @@
-FROM pennsive/r-env:base
+FROM pennsive/neuror:3.6.3
 ENV FREESURFER_HOME=/usr/local/freesurfer
 RUN R -e "install.packages('freesurfer')" && \
     curl -O https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz && \

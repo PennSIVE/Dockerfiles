@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build -t pennsive/r-env:freesurfer .
+docker build -t pennsive/freesurfer:3.6.3 .
 

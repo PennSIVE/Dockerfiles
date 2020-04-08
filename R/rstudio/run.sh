@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker run -d -e DISABLE_AUTH=true -p 80:8787 pennsive/r-env:rstudio
+docker run -d -e DISABLE_AUTH=true -p 80:8787 pennsive/rstudio:3.6.3
