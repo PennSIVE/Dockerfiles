@@ -17,17 +17,12 @@ RUN apt-get update && \
     libgit2-dev \
     libv8-dev \
     dirmngr \
-    software-properties-common \
-    apt-transport-https && \
-    apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF' && \
-    add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran35/' && \
-    apt update && \
-    apt install -y r-base && \
+    r-base && \
     curl -LO https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5-Linux-x86_64.sh && \
     sh cmake-3.15.5-Linux-x86_64.sh --skip-license && \
     rm -Rf cmake* && \
-    Rscript -e "install.packages(c('devtools', 'oro.nifti', 'oro.dicom', 'fslr', 'WhiteStripe', 'matrixStats', 'R.matlab', 'abind', 'R.utils', 'RNifti', 'stapler', 'testthat', 'hexSticker', 'dplyr', 'oasis', 'fslr', 'plyr', 'misc3d', 'pixmap', 'colormap'))" && \
+    curl -LO https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && chmod a+x fslinstaller.py && echo | ./fslinstaller.py
+RUN Rscript -e "install.packages(c('devtools', 'oro.nifti', 'oro.dicom', 'fslr', 'WhiteStripe', 'matrixStats', 'R.matlab', 'abind', 'R.utils', 'RNifti', 'stapler', 'testthat', 'hexSticker', 'dplyr', 'oasis', 'fslr', 'plyr', 'misc3d', 'pixmap', 'colormap', 'gifti'))" && \
     Rscript -e "devtools::install_github('ANTsX/ANTsR')" && \
     Rscript -e "devtools::install_github('muschellij2/extrantsr', dependencies = FALSE)" && \
-    Rscript -e "source('https://neuroconductor.org/neurocLite.R'); neuro_install('neurobase')" && \
-    curl -LO https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && chmod a+x fslinstaller.py && echo "" | ./fslinstaller.py
+    Rscript -e "source('https://neuroconductor.org/neurocLite.R'); neuro_install('neurobase')"
