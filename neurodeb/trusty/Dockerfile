@@ -1,5 +1,6 @@
-FROM neurodebian:buster-non-free
+FROM neurodebian:trusty-non-free
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    ants \
     fsl-complete \
     curl \
     git \
