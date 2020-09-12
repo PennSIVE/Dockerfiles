@@ -10,5 +10,6 @@ docker run --rm repronim/neurodocker:0.7.0 generate docker \
     --minc version=1.9.15 \
     --freesurfer version=6.0.0 \
     --convert3d version=1.0.0 \
+    --dcm2niix version=latest method=source \
     | docker build -t pennsive/neurodocker:buster -
 # note: without multiarch-support dpkg will not be able to install the pre-dependancy libxp6
