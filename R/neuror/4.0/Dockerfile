@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y \
             libtiff5-dev \
             python3 \
             python3-pip \
-            && pip3 install nipype pybids pyradiomics flywheel-sdk \
+            && pip3 install nipype pybids pyradiomics drmaa flywheel-sdk \
             && wget https://cran.rstudio.com/src/base/R-${R_VERSION_MAJOR}/R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
             && tar zxvf R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
             && rm R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
@@ -52,11 +52,13 @@ RUN apt-get update && apt-get install -y \
             && make install \
             && Rscript -e "\
             chooseCRANmirror(graphics=FALSE, ind=62); \
-            install.packages(c('devtools', 'BiocManager', 'argparser', 'reticulate', 'oro.nifti', 'oro.dicom', 'fslr', 'WhiteStripe', 'matrixStats', 'R.matlab', 'abind', 'R.utils', 'RNifti', 'stapler', 'testthat', 'hexSticker', 'dplyr', 'oasis', 'fslr', 'plyr', 'misc3d', 'pixmap', 'colormap', 'gifti', 'cifti', 'ROCR', 'freesurfer', 'freesurferformats', 'broom', 'broom.mixed', 'geepack', 'lme4', 'magrittr', 'neurobase', 'pbapply', 'purrr', 'readr', 'stringr', 'tibble', 'tidyr', 'voxel', 'forcats', 'gridExtra', 'RIA', 'Rfast', 'RJSONIO', 'pbmcapply', 'vesselr', 'tidyverse', 'caret', 'DMwR', 'acPCA')); \
+            install.packages(c('devtools', 'BiocManager', 'argparser', 'reticulate', 'oro.nifti', 'oro.dicom', 'fslr', 'WhiteStripe', 'matrixStats', 'R.matlab', 'abind', 'R.utils', 'RNifti', 'stapler', 'testthat', 'hexSticker', 'dplyr', 'oasis', 'fslr', 'plyr', 'misc3d', 'pixmap', 'colormap', 'gifti', 'cifti', 'ROCR', 'freesurfer', 'freesurferformats', 'broom', 'broom.mixed', 'geepack', 'lme4', 'magrittr', 'neurobase', 'pbapply', 'purrr', 'readr', 'stringr', 'tibble', 'tidyr', 'voxel', 'forcats', 'gridExtra', 'RIA', 'Rfast', 'RJSONIO', 'pbmcapply', 'vesselr', 'tidyverse', 'caret', 'DMwR', 'openxlsx', 'acPCA', 'randomForest', 'RSpectra')); \
             BiocManager::install(c('rhdf5', 'rhdf5filters', 'DelayedArray', 'DelayedMatrixStats', 'HDF5Array')); \
             source('https://neuroconductor.org/neurocLite.R'); neuro_install(c('ANTsRCore', 'ANTsR', 'extrantsr', 'NiftiArray', 'rlist', 'mimosa', 'malf.templates')); \
             devtools::install_github('avalcarcel9/rtapas')"
 # todo: figure out why installing lesiontools from github doesn't work
 RUN git clone https://github.com/jdwor/lesiontools.git && Rscript -e "install.packages('./lesiontools', repos = NULL, type='source')" && rm -rf lesiontools
 # todo: not sure whether to include this PCA library in main image
-RUN git clone https://github.com/linzx06/AC-PCA.git && Rscript -e "chooseCRANmirror(graphics=FALSE, ind=60); install.packages('RSpectra'); install.packages('./AC-PCA/R_package/acPCA', repos = NULL, type='source')" && rm -rf AC-PCA
+RUN git clone https://github.com/linzx06/AC-PCA.git && Rscript -e "chooseCRANmirror(graphics=FALSE, ind=60); install.packages('./AC-PCA/R_package/acPCA', repos = NULL, type='source')" && rm -rf AC-PCA
+RUN ln -s bash /bin/sh.bash && mv /bin/sh.bash /bin/sh
+    # ^freesurfer weirdly tries to call a bash script with sh, so replace sh with bash
