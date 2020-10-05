@@ -1,5 +1,5 @@
-# r-env:base plus rstudio installation based on https://hub.docker.com/r/rocker/rstudio/dockerfile
-FROM pennsive/neuror:3.6.3
+# neuroR plus rstudio installation based on https://hub.docker.com/r/rocker/rstudio/dockerfile
+FROM pennsive/neuror:3.6
 
 ARG RSTUDIO_VERSION
 ARG S6_VERSION
@@ -94,7 +94,7 @@ RUN apt-get update \
   echo "rm(list=c('line','tmp'))" >> /home/rstudio/.Rprofile && \
   echo "suppressPackageStartupMessages(library(ANTsR))" >> /home/rstudio/.Rprofile && \
   chown -R rstudio:rstudio /home/rstudio/ && \
-  ln -s /usr/bin/R /usr/local/bin/R
+  ln -snf /usr/bin/R /usr/local/bin/R
 
 COPY ./rocker-scripts/userconf.sh /etc/cont-init.d/userconf
 
