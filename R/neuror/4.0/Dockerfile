@@ -6,6 +6,7 @@ ARG CONFIGURE_OPTIONS="--with-cairo --with-jpeglib --enable-R-shlib --with-blas 
 RUN apt-get update && apt-get install -y \
             gfortran \
             git \
+            git-annex \
             g++ \
             libreadline-dev \
             libx11-dev \
@@ -42,7 +43,7 @@ RUN apt-get update && apt-get install -y \
             libtiff5-dev \
             python3 \
             python3-pip \
-            && pip3 install nipype pybids pyradiomics drmaa flywheel-sdk \
+            && pip3 install nipype pybids pyradiomics drmaa flywheel-sdk datalad datalad-neuroimaging datalad-container \
             && wget https://cran.rstudio.com/src/base/R-${R_VERSION_MAJOR}/R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
             && tar zxvf R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
             && rm R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
