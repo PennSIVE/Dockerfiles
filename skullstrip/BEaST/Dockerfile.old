@@ -1,0 +1,20 @@
+FROM ubuntu:10.04
+# ref https://rpubs.com/conge/beast_intro
+WORKDIR /opt
+ENV NIFTI_ROOT=/usr
+RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list && \
+    apt-get update && apt-get dist-upgrade -y && apt-get install -y -qq wget libc6 libstdc++6 imagemagick perl freeglut3 libxcb1 libxdmcp6 libx11-6 libxext6 libxau6 libuuid1 libjpeg62 libexpat1 libtiff4 libnifti-dev libhdf5-serial-dev build-essential cmake && \
+    wget --no-check-certificate http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/minc-toolkit-0.3.16-20121113-Ubuntu_10.04-x86_64.deb && \
+    dpkg -i minc-toolkit-0.3.16-20121113-Ubuntu_10.04-x86_64.deb && \
+    . /opt/minc/minc-toolkit-config.sh && \
+    wget http://www.bic.mni.mcgill.ca/uploads/ServicesSoftwareAdvancedImageProcessingTools/beast-1.15.tar.gz && \
+    tar -xzvf beast-1.15.tar.gz && \
+    cd beast-1.15 && \
+    cmake CMakeLists.txt && \
+    make && make install && \
+    wget http://packages.bic.mni.mcgill.ca/tgz/beast-library-1.1.tar.gz && \
+    tar xzf beast-library-1.1.tar.gz && \
+    mv beast-library-1.1 /opt/minc/share/ && \
+    mkdir Atlas && cd Atlas && \
+    wget http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09c_minc2.zip && \
+    unzip mni_icbm152_nlin_sym_09c_minc2.zip
