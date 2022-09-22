@@ -42,8 +42,9 @@ RUN apt-get update && apt-get install -y \
             libglu1-mesa-dev \
             libtiff5-dev \
             python3 \
-            python3-pip \
-            && pip3 install nipype pybids pyradiomics drmaa flywheel-sdk datalad datalad-neuroimaging datalad-container numpy scipy nibabel h5py \
+            python3-pip
+RUN pip3 install numpy scipy nibabel h5py nipype pybids drmaa flywheel-sdk datalad datalad-neuroimaging datalad-container
+RUN pip3 install SimpleITK pyradiomics \
             && wget https://cran.rstudio.com/src/base/R-${R_VERSION_MAJOR}/R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
             && tar zxvf R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
             && rm R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz \
