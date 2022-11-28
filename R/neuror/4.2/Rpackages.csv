@@ -17,7 +17,6 @@ CRAN,stapler
 CRAN,testthat
 CRAN,hexSticker
 CRAN,dplyr
-CRAN,oasis
 CRAN,fslr
 CRAN,plyr
 CRAN,misc3d
@@ -75,5 +74,10 @@ GitHub,avalcarcel9/mimosa
 GitHub,muschellij2/malf.templates
 GitHub,avalcarcel9/rtapas
 GitHub,jdwor/lesiontools
-GitHub,linzx06/AC-PCA
 GitHub,PennSIVE/freesurfer
+GitHub,ANTsX/ANTsRNet
+CRAN,kirby21.base
+CRAN,kirby21.t1
+CRAN,kirby21.fmri
+GitHub,kirby21.flair
+GitHub,Jfortin1/MNITemplate
