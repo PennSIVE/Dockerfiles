@@ -95,8 +95,18 @@ ln -s bash /bin/sh.bash && mv /bin/sh.bash /bin/sh
 RUN Rscript -e "remotes::install_github('ANTsX/ANTsRNet', upgrade=TRUE)"
 
 # kirby21 templates
-RUN Rscript -e "install.packages(c('kirby21.base','kirby21.t1', 'kirby21.fmri'))" -e "remotes::install_github('muschellij2/kirby21.flair')" 
+RUN Rscript -e "install.packages(c('kirby21.base','kirby21.t1', 'kirby21.fmri'))" \
+            -e "remotes::install_github('muschellij2/kirby21.flair')" 
 
 # MNI template
 RUN Rscript -e "remotes::install_github('Jfortin1/MNITemplate')"
+
+# AnalyzeFMRI | Sublime
+COPY AnalyzeFMRI_1.1-24.tar.gz .
+
+RUN wget https://cran.r-project.org/src/contrib/fastICA_1.2-3.tar.gz && R CMD INSTALL fastICA_1.2-3.tar.gz \
+    && wget https://cran.r-project.org/src/contrib/R.matlab_3.7.0.tar.gz && R CMD INSTALL R.matlab_3.7.0.tar.gz \
+    && R CMD INSTALL AnalyzeFMRI_1.1-24.tar.gz \
+    && Rscript -e "remotes::install_github('emsweene/SuBLIME_package', upgrade=TRUE)"
+
 
