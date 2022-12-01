@@ -85,7 +85,7 @@ RUN Rscript -e "install.packages(c('ggExtra', 'neuroim'))" \
 # lesiontools
 RUN git clone https://github.com/jdwor/lesiontools.git && Rscript -e "install.packages('./lesiontools', repos = NULL, type='source')" && rm -rf lesiontools
 # acPCA
-RUN git clone https://github.com/linzx06/AC-PCA.git && mv AC-PCA/R_package/acPCA_1.2.tar.gz . && R CMD INSTALL acPCA_1.2.tar.gz && rm -rf acPCA_1.2.tar.gz 
+RUN git clone https://github.com/linzx06/AC-PCA.git && mv AC-PCA/R_package/acPCA_1.2.tar.gz . && R CMD INSTALL acPCA_1.2.tar.gz && rm -rf acPCA_1.2.tar.gz
 # freesurer
 RUN git clone https://github.com/PennSIVE/freesurfer.git && cd freesurfer && git checkout mri_vol2surf && Rscript -e "install.packages('.', repos = NULL, type='source')" && cd .. && rm -rf freesurfer && \
 ln -s bash /bin/sh.bash && mv /bin/sh.bash /bin/sh
@@ -108,5 +108,38 @@ RUN wget https://cran.r-project.org/src/contrib/fastICA_1.2-3.tar.gz && R CMD IN
     && R CMD INSTALL AnalyzeFMRI_1.1-24.tar.gz && rm -rf AnalyzeFMRI_1.1-24.tar.gz \
     && Rscript -e "remotes::install_github('emsweene/SuBLIME_package', upgrade=TRUE)"
 
+# devtools
+RUN apt-get update && apt-get install -y \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    && Rscript -e "install.packages('devtools')"
 
+# hexSticker
+RUN apt-get update && apt-get install -y \
+    libmagick++-dev \
+    && Rscript -e "install.packages('hexSticker')"
 
+# colormap
+RUN apt-get update && apt-get install -y \
+    libv8-dev \
+    && Rscript -e "install.packages('colormap')"
+
+# DMwR
+RUN Rscript -e "install.packages(c('xts', 'quantmod', 'zoo'))" \
+    && wget https://cran.r-project.org/src/contrib/Archive/DMwR/DMwR_0.4.1.tar.gz && R CMD INSTALL DMwR_0.4.1.tar.gz && rm -rf DMwR_0.4.1.tar.gz
+
+# doRedis
+RUN apt-get update && apt-get install -y \
+    libhiredis-dev \
+    && Rscript -e "install.packages('doRedis')"
+
+# badgecreatr
+RUN Rscript -e "remotes::install_github('rmhogervorst/badgecreatr', upgrade=TRUE)"
+
+# RAVEL & ComBat(s)
+RUN pip3 install neuroCombat neuroHarmonize \
+    && Rscript -e "BiocManager::install('BiocParallel', ask=FALSE)" \
+    && Rscript -e "remotes::install_github(c('Jfortin1/neuroCombat_Rpackage', 'Jfortin1/neuroCombatData', 'Jfortin1/RAVEL', 'jcbeer/longCombat'), upgrade=TRUE)"
+
+# refund
+RUN Rscript -e "install.packages('refund')"
