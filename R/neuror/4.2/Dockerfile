@@ -69,25 +69,24 @@ RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"), download.file.m
              && make -j$(nproc) \
              && sudo make install \
              && alias cmake=$(which cmake) 
-# RUN Rscript -e "remotes::install_github(c('ANTsX/ANTsRCore@v0.7.4.9', 'ANTsX/ANTsR@v0.5.7.4'))"
-RUN git clone https://github.com/stnava/ITKR.git && R CMD INSTALL ITKR
-RUN git clone https://github.com/ANTsX/ANTsRCore.git && R CMD INSTALL ANTsRCore
-RUN git clone https://github.com/ANTsX/ANTsR.git && R CMD INSTALL ANTsR
+RUN git clone https://github.com/stnava/ITKR.git && R CMD INSTALL ITKR && rm -rf ITKR \
+    && git clone https://github.com/ANTsX/ANTsRCore.git && R CMD INSTALL ANTsRCore && rm -rf ANTsRCore \
+    && git clone https://github.com/ANTsX/ANTsR.git && R CMD INSTALL ANTsR && rm -rf ANTsR
 
 RUN Rscript -e "remotes::install_github('muschellij2/oasis', upgrade=TRUE)"
-
 # Install packages from source
 RUN git clone https://github.com/muschellij2/extrantsr.git && Rscript -e "install.packages('./extrantsr', repos = NULL, type='source')" && rm -rf extrantsr \
             && git clone https://github.com/muschellij2/NiftiArray.git && Rscript -e "install.packages('./NiftiArray', repos = NULL, type='source')" && rm -rf NiftiArray \
             && git clone https://github.com/avalcarcel9/mimosa.git && Rscript -e "install.packages('./mimosa', repos = NULL, type='source')" && rm -rf mimosa \
             && git clone https://github.com/muschellij2/malf.templates.git && Rscript -e "install.packages('./malf.templates', repos = NULL, type='source')" && rm -rf malf.templates 
+# rtapas
 RUN Rscript -e "install.packages(c('ggExtra', 'neuroim'))" \
             &&  git clone https://github.com/avalcarcel9/rtapas.git && Rscript -e "install.packages('./rtapas', repos = NULL, type='source')" && rm -rf rtapas
-# todo: figure out why installing lesiontools from github doesn't work
+# lesiontools
 RUN git clone https://github.com/jdwor/lesiontools.git && Rscript -e "install.packages('./lesiontools', repos = NULL, type='source')" && rm -rf lesiontools
-# todo: not sure whether to include this PCA library in main image
-RUN git clone https://github.com/linzx06/AC-PCA.git && mv AC-PCA/R_package/acPCA_1.2.tar.gz . && R CMD INSTALL acPCA_1.2.tar.gz
-#Rscript -e "chooseCRANmirror(graphics=FALSE, ind=60); install.packages('./AC-PCA/R_package/acPCA', repos = NULL, type='source')" && rm -rf AC-PCA && \
+# acPCA
+RUN git clone https://github.com/linzx06/AC-PCA.git && mv AC-PCA/R_package/acPCA_1.2.tar.gz . && R CMD INSTALL acPCA_1.2.tar.gz && rm -rf acPCA_1.2.tar.gz 
+# freesurer
 RUN git clone https://github.com/PennSIVE/freesurfer.git && cd freesurfer && git checkout mri_vol2surf && Rscript -e "install.packages('.', repos = NULL, type='source')" && cd .. && rm -rf freesurfer && \
 ln -s bash /bin/sh.bash && mv /bin/sh.bash /bin/sh
 
@@ -104,9 +103,10 @@ RUN Rscript -e "remotes::install_github('Jfortin1/MNITemplate')"
 # AnalyzeFMRI | Sublime
 COPY AnalyzeFMRI_1.1-24.tar.gz .
 
-RUN wget https://cran.r-project.org/src/contrib/fastICA_1.2-3.tar.gz && R CMD INSTALL fastICA_1.2-3.tar.gz \
-    && wget https://cran.r-project.org/src/contrib/R.matlab_3.7.0.tar.gz && R CMD INSTALL R.matlab_3.7.0.tar.gz \
-    && R CMD INSTALL AnalyzeFMRI_1.1-24.tar.gz \
+RUN wget https://cran.r-project.org/src/contrib/fastICA_1.2-3.tar.gz && R CMD INSTALL fastICA_1.2-3.tar.gz && rm -rf fastICA_1.2-3.tar.gz \
+    && wget https://cran.r-project.org/src/contrib/R.matlab_3.7.0.tar.gz && R CMD INSTALL R.matlab_3.7.0.tar.gz && rm -rf R.matlab_3.7.0.tar.gz \
+    && R CMD INSTALL AnalyzeFMRI_1.1-24.tar.gz && rm -rf AnalyzeFMRI_1.1-24.tar.gz \
     && Rscript -e "remotes::install_github('emsweene/SuBLIME_package', upgrade=TRUE)"
+
 
 
