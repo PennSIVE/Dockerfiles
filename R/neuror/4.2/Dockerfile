@@ -143,3 +143,9 @@ RUN pip3 install neuroCombat neuroHarmonize \
 
 # refund
 RUN Rscript -e "install.packages('refund')"
+
+# RESI
+RUN Rscript -e "remotes::install_github('statimagcoll/RESI', upgrade=TRUE)"
+
+# vegan
+RUN Rscript -e "install.packages('vegan')"
