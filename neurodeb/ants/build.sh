@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t pennsive/ants .
+docker build -t pennsive/ants . &> build.log
