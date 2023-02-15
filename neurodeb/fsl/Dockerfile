@@ -40,9 +40,9 @@ RUN apt-get update -qq \
 RUN echo "Downloading FSL ..." \
     && mkdir -p /opt/fsl-6.0.5 \
     && curl -fL https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-6.0.5-centos7_64.tar.gz \
-    | tar -xz -C /opt/fsl-6.0.5 --strip-components 1 \
-    && echo "Installing FSL conda environment ..." \
-    && bash /opt/fsl-6.0.5/etc/fslconf/fslpython_install.sh -f /opt/fsl-6.0.5
+    | tar -xz -C /opt/fsl-6.0.5 --strip-components 1
+#    && echo "Installing FSL conda environment ..." \
+#    && bash /opt/fsl-6.0.5/etc/fslconf/fslpython_install.sh -f /opt/fsl-6.0.5
 
 # Save specification to JSON.
 RUN printf '{ \
@@ -75,7 +75,7 @@ RUN printf '{ \
     { \
       "name": "run", \
       "kwds": { \
-        "command": "apt-get update -qq\\napt-get install -y -q --no-install-recommends \\\\\\n    bc \\\\\\n    ca-certificates \\\\\\n    curl \\\\\\n    dc \\\\\\n    file \\\\\\n    libfontconfig1 \\\\\\n    libfreetype6 \\\\\\n    libgl1-mesa-dev \\\\\\n    libgl1-mesa-dri \\\\\\n    libglu1-mesa-dev \\\\\\n    libgomp1 \\\\\\n    libice6 \\\\\\n    libopenblas-base \\\\\\n    libxcursor1 \\\\\\n    libxft2 \\\\\\n    libxinerama1 \\\\\\n    libxrandr2 \\\\\\n    libxrender1 \\\\\\n    libxt6 \\\\\\n    nano \\\\\\n    sudo \\\\\\n    wget\\nrm -rf /var/lib/apt/lists/*\\necho \\"Downloading FSL ...\\"\\nmkdir -p /opt/fsl-6.0.5\\ncurl -fL https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-6.0.5-centos7_64.tar.gz \\\\\\n| tar -xz -C /opt/fsl-6.0.5 --strip-components 1 \\necho \\"Installing FSL conda environment ...\\"\\nbash /opt/fsl-6.0.5/etc/fslconf/fslpython_install.sh -f /opt/fsl-6.0.5" \
+        "command": "apt-get update -qq\\napt-get install -y -q --no-install-recommends \\\\\\n    bc \\\\\\n    ca-certificates \\\\\\n    curl \\\\\\n    dc \\\\\\n    file \\\\\\n    libfontconfig1 \\\\\\n    libfreetype6 \\\\\\n    libgl1-mesa-dev \\\\\\n    libgl1-mesa-dri \\\\\\n    libglu1-mesa-dev \\\\\\n    libgomp1 \\\\\\n    libice6 \\\\\\n    libopenblas-base \\\\\\n    libxcursor1 \\\\\\n    libxft2 \\\\\\n    libxinerama1 \\\\\\n    libxrandr2 \\\\\\n    libxrender1 \\\\\\n    libxt6 \\\\\\n    nano \\\\\\n    sudo \\\\\\n    wget\\nrm -rf /var/lib/apt/lists/*\\necho \\"Downloading FSL ...\\"\\nmkdir -p /opt/fsl-6.0.5\\ncurl -fL https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-6.0.5-centos7_64.tar.gz \\\\\\n| tar -xz -C /opt/fsl-6.0.5 --strip-components 1" \
       } \
     } \
   ] \
